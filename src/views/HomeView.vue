@@ -308,7 +308,7 @@
 
           <!-- Product Grid -->
           <div class="px-6 mb-8">
-            <h3 class="text-lg font-semibold mb-4">热门商品</h3>
+            <h3 class="text-lg font-semibold mb-4">周边</h3>
             <div class="grid grid-cols-2 gap-4">
               <div 
                 v-for="product in mallGridProducts" 

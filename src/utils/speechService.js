@@ -69,10 +69,10 @@ class RealTimeConversationalAI {
 
   async connect() {
     if (!this.elevenLabsApiKey) {
-      if(this.onError) this.onError("ElevenLabs API Key is not set.");
-      return;
+        if(this.onError) this.onError("ElevenLabs API Key is not set.");
+        return;
     }
-
+      
     if (!this.agentId) {
       if(this.onError) this.onError("Agent ID is not set.");
       return;
@@ -81,9 +81,9 @@ class RealTimeConversationalAI {
     try {
       // 获取签名URL
       const signedUrl = await this.getSignedUrl();
-      
+
       this.websocket = new WebSocket(signedUrl);
-      await this.handleWebSocketConnection();
+    await this.handleWebSocketConnection();
     } catch (error) {
       console.error('连接失败:', error);
       if (this.onError) this.onError(`连接失败: ${error.message}`);
@@ -105,7 +105,7 @@ class RealTimeConversationalAI {
           echoCancellation: true,
           noiseSuppression: true,
           autoGainControl: true
-        } 
+        }
       });
 
       this.setupAudioContext(stream);
@@ -119,7 +119,7 @@ class RealTimeConversationalAI {
       if (this.onError) this.onError('Could not access microphone.');
     }
   }
-
+  
   stopListening() {
     if (this.processor) {
       this.processor.disconnect();
@@ -138,11 +138,11 @@ class RealTimeConversationalAI {
 
   disconnect() {
     this.cleanup();
-    
+
     // 安全地关闭WebSocket连接
     if (this.websocket) {
       if (this.websocket.readyState === WebSocket.OPEN || this.websocket.readyState === WebSocket.CONNECTING) {
-        this.websocket.close();
+      this.websocket.close();
       }
       // 清除事件监听器
       this.websocket.onopen = null;
@@ -325,16 +325,16 @@ class RealTimeConversationalAI {
 
   async handleWebSocketConnection() {
     return new Promise((resolve, reject) => {
-          this.websocket.onopen = () => {
+      this.websocket.onopen = () => {
       console.log('已连接到 ElevenLabs Conversational AI');
-      this.isConnected = true;
-      if (this.onStatusChange) this.onStatusChange('connected');
+        this.isConnected = true;
+        if (this.onStatusChange) this.onStatusChange('connected');
       
       // 检查并记录音频支持情况
       this.checkAudioSupport();
       
-      resolve();
-    };
+        resolve();
+      };
       
       this.websocket.onmessage = (event) => this.handleWebSocketMessage(event);
       
@@ -470,14 +470,14 @@ class RealTimeConversationalAI {
         const len = pcmData.byteLength;
         for (let i = 0; i < len; i++) {
           binary += String.fromCharCode(pcmData[i]);
-        }
+            }
         
         // 发送音频数据到Conversational AI
         this.websocket.send(JSON.stringify({
           type: 'audio',
           audio_event: {
             audio_base_64: btoa(binary)
-          }
+        }
         }));
       }
     };

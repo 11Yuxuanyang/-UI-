@@ -48,12 +48,12 @@
       <div class="mb-6">
         <label class="block text-sm font-medium text-gray-300 mb-2">
           🤖 Agent ID
-        </label>
-        <input
+          </label>
+          <input
           v-model="agentId"
           class="w-full px-4 py-3 bg-gray-800/50 border border-gray-600/50 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 transition-colors"
           placeholder="输入您的 Conversational AI Agent ID"
-        />
+          />
         <p class="text-xs text-gray-400 mt-2">
           在 ElevenLabs 控制台创建 Conversational AI Agent 后获取
         </p>
@@ -225,10 +225,10 @@ const testAgent = async () => {
     showStatus('浏览器不支持麦克风访问', 'error')
     return
   }
-
+  
   isTesting.value = true
   statusMessage.value = '正在测试 Agent 连接...'
-
+  
   try {
     // 设置API密钥和Agent配置
     speechService.setElevenLabsApiKey(apiKey.value)
@@ -240,7 +240,7 @@ const testAgent = async () => {
     if (result.success) {
       lastAgentInfo.value = result
       showStatus(`✅ ${result.message}！Agent: ${result.agentName}`, 'success')
-      
+    
       // 获取诊断信息
       const diagnostic = speechService.getDiagnosticInfo()
       console.log('🔧 Conversational AI 诊断信息:', diagnostic)
@@ -273,8 +273,8 @@ const saveSettings = () => {
     agentId: agentId.value,
     // 向后兼容
     voiceId: agentId.value
-  }
-  
+    }
+    
   localStorage.setItem('elevenLabsSettings', JSON.stringify(settings))
   
   // 更新speechService
@@ -287,9 +287,9 @@ const saveSettings = () => {
   
   showStatus('✅ 设置已保存', 'success')
   
-  setTimeout(() => {
+    setTimeout(() => {
     emit('saved', settings)
-    emit('close')
+      emit('close')
   }, 1500)
 }
 
@@ -299,9 +299,9 @@ const showStatus = (message, type) => {
   statusType.value = type
   
   if (type === 'success') {
-    setTimeout(() => {
-      statusMessage.value = ''
-    }, 3000)
+  setTimeout(() => {
+    statusMessage.value = ''
+  }, 3000)
   }
 }
 </script>
