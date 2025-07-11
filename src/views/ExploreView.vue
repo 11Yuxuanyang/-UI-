@@ -1,15 +1,7 @@
 <template>
   <div class="h-screen w-full bg-black flex flex-col relative overflow-hidden">
-    <!-- 视频背景 -->
-    <video 
-      class="absolute inset-0 w-full h-full object-cover z-0 opacity-30"
-      autoplay 
-      muted 
-      loop 
-      playsinline
-      :src="backgroundVideoUrl"
-    >
-    </video>
+    <!-- 静态背景 -->
+    <div class="absolute inset-0 bg-gradient-to-br from-gray-900 via-purple-900 to-blue-900 z-0"></div>
     
     <!-- 渐变遮罩层 -->
     <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/20 to-black/80 z-10"></div>
@@ -77,23 +69,24 @@
                 <div class="text-sm text-gray-400">2:30</div>
               </div>
               
-              <!-- 视频预览 -->
-              <div class="relative bg-gray-900/50 rounded-2xl overflow-hidden aspect-video">
+              <!-- 产品演示图片 -->
+              <div class="relative bg-gradient-to-br from-blue-900/50 to-purple-900/50 rounded-2xl overflow-hidden aspect-video border border-white/10">
                 <div class="absolute inset-0 flex items-center justify-center">
-                  <button @click="playTeaser" class="w-16 h-16 bg-white/90 rounded-full flex items-center justify-center hover:bg-white transition-all shadow-lg">
-                    <svg class="w-6 h-6 text-black ml-1" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M8 5v14l11-7z"/>
-                    </svg>
-                  </button>
+                  <div class="text-center space-y-4">
+                    <div class="text-6xl">⌚</div>
+                    <div class="text-white font-semibold">HealthWatch Pro</div>
+                    <div class="text-gray-300 text-sm">智能健康监测</div>
+                  </div>
                 </div>
-                <!-- 缩略图 -->
-                <div class="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center">
-                  <div class="text-6xl opacity-20">🏃‍♀️</div>
-                </div>
+                <!-- 装饰性图标 -->
+                <div class="absolute top-4 left-4 w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+                <div class="absolute top-4 right-4 w-3 h-3 bg-blue-400 rounded-full animate-pulse delay-300"></div>
+                <div class="absolute bottom-4 left-4 w-3 h-3 bg-purple-400 rounded-full animate-pulse delay-700"></div>
+                <div class="absolute bottom-4 right-4 w-3 h-3 bg-orange-400 rounded-full animate-pulse delay-1000"></div>
               </div>
               
               <p class="text-gray-300 text-sm">
-                观看HealthWatch如何通过AI技术革新您的健康管理体验
+                体验HealthWatch如何通过AI技术革新您的健康管理
               </p>
             </div>
           </section>
@@ -220,51 +213,15 @@
       </footer>
     </div>
 
-    <!-- Teaser视频模态框 -->
-    <div v-if="showTeaserModal" class="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4">
-      <div class="relative w-full max-w-2xl aspect-video bg-black rounded-2xl overflow-hidden">
-        <button @click="closeTeaserModal" class="absolute top-4 right-4 w-10 h-10 bg-white/20 rounded-full flex items-center justify-center z-10 hover:bg-white/30 transition-all">
-          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-          </svg>
-        </button>
-        <video 
-          ref="teaserVideo"
-          class="w-full h-full object-cover"
-          controls
-          autoplay
-          :src="teaserVideoUrl"
-        >
-        </video>
-      </div>
-    </div>
+
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import backgroundVideoUrl from '/assets/background-video.mp4'
-import teaserVideoUrl from '/videos/background.mp4'
 
 const router = useRouter()
-
-// 响应式数据
-const showTeaserModal = ref(false)
-const teaserVideo = ref(null)
-
-// 播放Teaser视频
-const playTeaser = () => {
-  showTeaserModal.value = true
-}
-
-// 关闭Teaser视频
-const closeTeaserModal = () => {
-  showTeaserModal.value = false
-  if (teaserVideo.value) {
-    teaserVideo.value.pause()
-  }
-}
 
 // 登录
 const handleLogin = () => {

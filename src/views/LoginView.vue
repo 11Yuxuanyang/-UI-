@@ -3,16 +3,8 @@
       
     <!-- 所有内容 -->
     <div class="h-full w-full flex flex-col relative">
-      <!-- 视频背景 -->
-      <video 
-        class="absolute inset-0 w-full h-full object-cover z-0 opacity-40"
-        autoplay 
-        muted 
-        loop 
-        playsinline
-        :src="backgroundVideoUrl"
-      >
-      </video>
+      <!-- 静态背景 -->
+      <div class="absolute inset-0 bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 z-0"></div>
       
       <!-- 渐变遮罩层 -->
       <div class="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/80 z-10"></div>
@@ -118,7 +110,6 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import backgroundVideoUrl from '/assets/background-video.mp4'
 
 const router = useRouter()
 
