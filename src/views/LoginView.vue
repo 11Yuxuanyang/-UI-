@@ -11,7 +11,7 @@
         loop 
         playsinline
       >
-        <source src="/assets/background-video.mp4" type="video/mp4">
+        <source src="./assets/background-video.mp4" type="video/mp4">
       </video>
       
       <!-- 渐变遮罩层 -->
