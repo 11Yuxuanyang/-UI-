@@ -68,7 +68,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, computed, watch, provide } from 'vue';
+import { ref, onMounted, onUnmounted, computed, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import BottomNavBar from './components/BottomNavBar.vue';
 import speechService from './utils/speechService.js';
@@ -77,22 +77,23 @@ import speechService from './utils/speechService.js';
 const route = useRoute();
 
 // --- Navigation Visibility Control ---
-const isNavVisible = ref(true);
-provide('setNavVisibility', (isVisible) => {
-  isNavVisible.value = isVisible;
-});
+// const isNavVisible = ref(true); // Deprecated
+// provide('setNavVisibility', (isVisible) => { // Deprecated
+//   isNavVisible.value = isVisible;
+// });
 
 // 控制底部导航栏显示
 const loginStatus = ref(sessionStorage.getItem('tempLoginStatus') === 'true');
 
 const showBottomNav = computed(() => {
-  // 如果在登录页面或探索页面，不显示底部导航栏
-  if (route.path === '/' || route.path === '/explore') {
+  const noNavRoutes = ['/', '/explore', '/mall'];
+  // 如果在不需要导航栏的页面，则不显示
+  if (noNavRoutes.includes(route.path)) {
     return false;
   }
   
-  // 检查是否有登录状态并且导航栏是可见的
-  return loginStatus.value && isNavVisible.value;
+  // 检查是否有登录状态
+  return loginStatus.value;
 });
 
 // 更新登录状态的函数

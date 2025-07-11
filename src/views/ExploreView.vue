@@ -128,7 +128,7 @@ const handleLogin = () => {
 const startExperience = () => {
   sessionStorage.setItem('tempLoginStatus', 'true')
   window.dispatchEvent(new Event('loginStatusChanged'))
-  router.push('/home?show=mall')
+  router.push('/mall')
 }
 
 const handleScroll = () => {
