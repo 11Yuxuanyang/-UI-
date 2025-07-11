@@ -3,23 +3,7 @@
     <div class="h-full w-full bg-black flex flex-col relative overflow-hidden">
       
     <!-- 所有内容 -->
-    <div class="h-full w-full flex flex-col relative">
-      <!-- 视频背景 -->
-      <video 
-        autoplay 
-        muted 
-        loop 
-        playsinline
-        class="absolute inset-0 w-full h-full object-cover z-0"
-      >
-        <source src="/assets/login-background.mp4" type="video/mp4">
-        <!-- 视频加载失败时的降级背景 -->
-        <div class="absolute inset-0 bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900"></div>
-      </video>
-      
-      <!-- 视频加载失败时的备用背景 -->
-      <div class="absolute inset-0 bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 z-0" style="z-index: -1;"></div>
-      
+    <div class="h-full w-full flex flex-col relative bg-black">
       <!-- 渐变遮罩层 -->
       <div class="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/80 z-10"></div>
       
