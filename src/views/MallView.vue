@@ -210,7 +210,7 @@ const mallSearchQuery = ref('');
 const selectedMallCategory = ref('all');
 
 const goBack = () => {
-  router.back();
+  router.push('/home');
 };
 
 // 商城相关数据
