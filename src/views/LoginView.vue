@@ -4,8 +4,21 @@
       
     <!-- 所有内容 -->
     <div class="h-full w-full flex flex-col relative">
-      <!-- 静态背景 -->
-      <div class="absolute inset-0 bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 z-0"></div>
+      <!-- 视频背景 -->
+      <video 
+        autoplay 
+        muted 
+        loop 
+        playsinline
+        class="absolute inset-0 w-full h-full object-cover z-0"
+      >
+        <source src="/assets/login-background.mp4" type="video/mp4">
+        <!-- 视频加载失败时的降级背景 -->
+        <div class="absolute inset-0 bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900"></div>
+      </video>
+      
+      <!-- 视频加载失败时的备用背景 -->
+      <div class="absolute inset-0 bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 z-0" style="z-index: -1;"></div>
       
       <!-- 渐变遮罩层 -->
       <div class="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/80 z-10"></div>
@@ -210,11 +223,31 @@ const quickLogin = () => {
 /* 视频背景优化 */
 video {
   pointer-events: none; /* 防止视频拦截点击事件 */
+  object-fit: cover; /* 确保视频完全覆盖背景 */
+  object-position: center; /* 视频居中显示 */
 }
 
-/* 确保视频完全覆盖背景 */
+/* 隐藏视频控制栏 */
 video::-webkit-media-controls {
   display: none !important;
+}
+
+video::-webkit-media-controls-panel {
+  display: none !important;
+}
+
+video::-webkit-media-controls-play-button {
+  display: none !important;
+}
+
+video::-webkit-media-controls-start-playback-button {
+  display: none !important;
+}
+
+/* 提升视频性能 */
+video {
+  will-change: transform;
+  transform: translateZ(0);
 }
 
 /* 模态框动画 */

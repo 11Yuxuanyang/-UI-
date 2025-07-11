@@ -356,7 +356,7 @@
 
     <!-- Voice Settings Modal -->
     <VoiceSettings 
-      v-if="showVoiceSettings" 
+      v-if="showVoiceSettingsModal" 
       @close="closeVoiceSettings"
       @saved="onVoiceSettingsSaved"
     />
@@ -364,7 +364,8 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted, onUnmounted, inject } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import ActivityCard from '../components/ActivityCard.vue';
 import HeartRateCard from '../components/HeartRateCard.vue';
 import StressCard from '../components/StressCard.vue';
@@ -381,13 +382,84 @@ const props = defineProps({
   showHint: Boolean,
 });
 
-// 状态管理
-const showAddDeviceModal = ref(false)
-const showMallModal = ref(false)
-const showMallSearch = ref(false)
+const route = useRoute();
+const router = useRouter();
+const showAddDeviceModal = ref(false);
+const showMallModal = ref(false);
+const showMallSearch = ref(false);
 const mallSearchQuery = ref('')
 const selectedMallCategory = ref('all')
-const showVoiceSettings = ref(false)
+const showVoiceSettingsModal = ref(false);
+
+// Inject navigation visibility control
+const setNavVisibility = inject('setNavVisibility');
+
+// Open mall based on route query
+onMounted(() => {
+  if (route.query.show === 'mall') {
+    showMallModal.value = true;
+    if (setNavVisibility) {
+      setNavVisibility(false);
+    }
+  }
+});
+
+// Reset nav visibility when leaving the view
+onUnmounted(() => {
+  if (setNavVisibility) {
+    setNavVisibility(true);
+  }
+});
+
+
+// 状态管理
+const openMall = () => {
+  showAddDeviceModal.value = false;
+  showMallModal.value = true;
+  if (setNavVisibility) {
+    setNavVisibility(false);
+  }
+};
+
+const closeMall = () => {
+  showMallModal.value = false;
+  if (setNavVisibility) {
+    setNavVisibility(true);
+  }
+};
+
+// 语音设置相关方法
+const openVoiceSettings = () => {
+  showAddDeviceModal.value = false;
+  showVoiceSettingsModal.value = true;
+};
+
+const closeVoiceSettings = () => {
+  showVoiceSettingsModal.value = false
+}
+
+const onVoiceSettingsSaved = () => {
+  console.log('语音设置已保存')
+  // 这里可以添加额外的处理逻辑，比如显示成功提示
+}
+
+const testVoice = async () => {
+  try {
+    console.log('开始语音功能测试...')
+    showAddDeviceModal.value = false
+    
+    // 测试语音合成
+    if (speechService) {
+      // 生成一个测试回复并播放
+      await speechService.generateAIResponseAndSpeak('语音功能测试')
+      console.log('语音测试完成')
+    } else {
+      console.error('语音服务未初始化')
+    }
+  } catch (error) {
+    console.error('语音测试失败:', error)
+  }
+}
 
 // 商城相关数据
 const mallCategories = ref([
@@ -488,49 +560,6 @@ const mallServices = ref([
     iconColor: 'text-purple-400'
   }
 ])
-
-// 商城相关方法
-const openMall = () => {
-  showAddDeviceModal.value = false
-  showMallModal.value = true
-}
-
-const closeMall = () => {
-  showMallModal.value = false
-}
-
-// 语音设置相关方法
-const openVoiceSettings = () => {
-  showAddDeviceModal.value = false
-  showVoiceSettings.value = true
-}
-
-const closeVoiceSettings = () => {
-  showVoiceSettings.value = false
-}
-
-const onVoiceSettingsSaved = () => {
-  console.log('语音设置已保存')
-  // 这里可以添加额外的处理逻辑，比如显示成功提示
-}
-
-const testVoice = async () => {
-  try {
-    console.log('开始语音功能测试...')
-    showAddDeviceModal.value = false
-    
-    // 测试语音合成
-    if (speechService) {
-      // 生成一个测试回复并播放
-      await speechService.generateAIResponseAndSpeak('语音功能测试')
-      console.log('语音测试完成')
-    } else {
-      console.error('语音服务未初始化')
-    }
-  } catch (error) {
-    console.error('语音测试失败:', error)
-  }
-}
 
 // 获取当前日期
 const getCurrentDate = () => {

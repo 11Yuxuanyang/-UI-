@@ -68,13 +68,19 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, computed, watch } from 'vue';
+import { ref, onMounted, onUnmounted, computed, watch, provide } from 'vue';
 import { useRoute } from 'vue-router';
 import BottomNavBar from './components/BottomNavBar.vue';
 import speechService from './utils/speechService.js';
 
 // --- 路由控制 ---
 const route = useRoute();
+
+// --- Navigation Visibility Control ---
+const isNavVisible = ref(true);
+provide('setNavVisibility', (isVisible) => {
+  isNavVisible.value = isVisible;
+});
 
 // 控制底部导航栏显示
 const loginStatus = ref(sessionStorage.getItem('tempLoginStatus') === 'true');
@@ -85,8 +91,8 @@ const showBottomNav = computed(() => {
     return false;
   }
   
-  // 检查是否有登录状态
-  return loginStatus.value;
+  // 检查是否有登录状态并且导航栏是可见的
+  return loginStatus.value && isNavVisible.value;
 });
 
 // 更新登录状态的函数
