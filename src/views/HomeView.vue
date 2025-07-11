@@ -67,22 +67,54 @@
         <div
           v-for="(bar, index) in audioVisualizationBars"
           :key="index"
-          class="bg-gradient-to-t from-gray-600 via-gray-500 to-gray-400 rounded-t-sm transition-all duration-150 ease-out border-r border-gray-700"
+          class="relative transition-all duration-150 ease-out"
           :style="{ 
-            width: '4px', 
+            width: '6px', 
             height: `${bar}px`,
-            opacity: isVoiceActive ? 1 : 0.7,
-            backgroundColor: isVoiceActive ? 
-              `hsl(${240 + index * 8}, 70%, ${50 + Math.sin(Date.now() * 0.01 + index) * 20}%)` : 
-              '#6B7280',
+            background: isVoiceActive ? 
+              `linear-gradient(90deg, 
+                #1e293b 0%, 
+                #475569 20%, 
+                #cbd5e1 45%, 
+                #f1f5f9 50%, 
+                #cbd5e1 55%, 
+                #475569 80%, 
+                #1e293b 100%)` : 
+              `linear-gradient(90deg, 
+                #374151 0%, 
+                #6b7280 20%, 
+                #9ca3af 45%, 
+                #d1d5db 50%, 
+                #9ca3af 55%, 
+                #6b7280 80%, 
+                #374151 100%)`,
+            borderRadius: '3px',
             boxShadow: isVoiceActive ? 
-              `0 0 ${Math.random() * 8 + 4}px rgba(99, 102, 241, 0.6)` : 
-              'inset 0 1px 2px rgba(0,0,0,0.3)',
+              `inset 1px 0 1px rgba(255,255,255,0.3), 
+               inset -1px 0 1px rgba(0,0,0,0.3),
+               0 0 ${Math.random() * 8 + 4}px rgba(99, 102, 241, 0.4),
+               0 2px 4px rgba(0,0,0,0.3)` : 
+              `inset 1px 0 1px rgba(255,255,255,0.2), 
+               inset -1px 0 1px rgba(0,0,0,0.4),
+               0 1px 3px rgba(0,0,0,0.3)`,
             transform: isVoiceActive ? 
-              `scaleY(${0.8 + Math.random() * 0.4})` : 
-              'scaleY(1)'
+              `scaleY(${0.8 + Math.random() * 0.4}) scaleX(1.1)` : 
+              'scaleY(1) scaleX(1)',
+            opacity: isVoiceActive ? 
+              0.9 + Math.random() * 0.1 : 
+              0.8
           }"
-        ></div>
+        >
+          <!-- 顶部圆形高光 -->
+          <div 
+            class="absolute top-0 left-1/2 transform -translate-x-1/2 w-full h-1.5 rounded-full"
+            :style="{
+              background: isVoiceActive ? 
+                'radial-gradient(ellipse at center, rgba(241,245,249,0.8) 0%, rgba(203,213,225,0.4) 70%, transparent 100%)' :
+                'radial-gradient(ellipse at center, rgba(209,213,219,0.6) 0%, rgba(156,163,175,0.3) 70%, transparent 100%)'
+            }"
+          ></div>
+        </div>
       </div>
     </div>
     
