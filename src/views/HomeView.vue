@@ -70,7 +70,7 @@
           class="relative transition-all duration-150 ease-out"
           :style="{ 
             width: '6px', 
-            height: `${bar}px`,
+            height: `${bar.height}px`,
             background: isVoiceActive ? 
               `linear-gradient(90deg, 
                 #1e293b 0%, 
@@ -98,8 +98,8 @@
                inset -1px 0 1px rgba(0,0,0,0.4),
                0 1px 3px rgba(0,0,0,0.3)`,
             transform: isVoiceActive ? 
-              `scaleY(${0.8 + Math.random() * 0.4}) scaleX(1.1)` : 
-              'scaleY(1) scaleX(1)',
+              `translateY(${bar.offsetY}px) scaleY(${0.8 + Math.random() * 0.4}) scaleX(1.1)` : 
+              `translateY(${bar.offsetY}px) scaleY(1) scaleX(1)`,
             opacity: isVoiceActive ? 
               0.9 + Math.random() * 0.1 : 
               0.8
@@ -242,31 +242,37 @@ const isVoiceActive = computed(() =>
 
 // 初始化音频柱状图
 const initializeAudioBars = () => {
-  // 创建16个柱子，初始高度为随机值
-  audioVisualizationBars.value = Array.from({ length: 16 }, () => 
-    Math.random() * 30 + 10  // 10-40px的随机高度
-  );
+  // 创建16个柱子，初始高度为随机值，并添加垂直偏移
+  audioVisualizationBars.value = Array.from({ length: 16 }, () => ({
+    height: Math.random() * 30 + 10,  // 10-40px的随机高度
+    offsetY: 0  // 初始垂直偏移为0
+  }));
 };
 
 // 更新音频可视化
 const updateAudioBars = () => {
   if (props.audioVisualization && props.audioVisualization.length > 0) {
     // 使用从App.vue传来的音频数据
-    audioVisualizationBars.value = props.audioVisualization.slice(0, 16).map(value => 
-      Math.max(8, Math.min(60, value * 0.6 + 8))  // 限制在8-60px范围内
-    );
+    audioVisualizationBars.value = props.audioVisualization.slice(0, 16).map((value, index) => {
+      const currentBar = audioVisualizationBars.value[index] || { height: 15, offsetY: 0 };
+      return {
+        height: Math.max(8, Math.min(60, value * 0.6 + 8)),  // 限制在8-60px范围内
+        offsetY: isVoiceActive.value ? (Math.sin(Date.now() * 0.01 + index * 0.5) * 8) : 0  // 上下运动幅度8px
+      };
+    });
   } else if (isVoiceActive.value) {
     // 如果没有真实音频数据但语音激活，生成动态效果
-    audioVisualizationBars.value = audioVisualizationBars.value.map(() => 
-      Math.random() * 40 + 15  // 15-55px的随机跳动
-    );
+    audioVisualizationBars.value = audioVisualizationBars.value.map((bar, index) => ({
+      height: Math.random() * 40 + 15,  // 15-55px的随机跳动
+      offsetY: Math.sin(Date.now() * 0.008 + index * 0.8) * 10 + Math.random() * 6 - 3  // 更动态的上下运动
+    }));
   } else {
     // 静止状态，轻微呼吸效果
     const time = Date.now() * 0.003;
-    audioVisualizationBars.value = audioVisualizationBars.value.map((_, index) => {
-      const baseHeight = 15 + Math.sin(time + index * 0.5) * 5;
-      return baseHeight;
-    });
+    audioVisualizationBars.value = audioVisualizationBars.value.map((bar, index) => ({
+      height: 15 + Math.sin(time + index * 0.5) * 5,
+      offsetY: Math.sin(time * 0.5 + index * 0.3) * 2  // 静止时轻微的上下浮动
+    }));
   }
 };
 
