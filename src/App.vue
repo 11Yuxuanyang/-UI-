@@ -261,18 +261,18 @@ const updateAudioVisualization = () => {
   if (isRealTimeCallActive.value && speechService) {
     const audioData = speechService.getAudioData()
     if (audioData && audioData.length > 0) {
-      // 转换为可视化数据，取前20个元素（适合手环显示）
-      audioVisualization.value = Array.from(audioData).slice(0, 20).map(value => value * 2)
+      // 转换为可视化数据，取前12个元素（适合手环显示）
+      audioVisualization.value = Array.from(audioData).slice(0, 12).map(value => value * 2.5)
     } else {
       // 如果没有音频数据，生成随机可视化效果
-      audioVisualization.value = Array.from({length: 20}, () => Math.random() * 60 + 20)
+      audioVisualization.value = Array.from({length: 12}, () => Math.random() * 70 + 15)
     }
   } else {
     // 在非通话状态时，显示静态的呼吸效果
-    const time = performance.now() * 0.002;
-    audioVisualization.value = Array.from({length: 20}, (_, i) => {
-      const wave = Math.sin(time + i * 0.3) * 20 + 30;
-      return Math.max(5, wave);
+    const time = performance.now() * 0.003;
+    audioVisualization.value = Array.from({length: 12}, (_, i) => {
+      const wave = Math.sin(time + i * 0.4) * 25 + 35;
+      return Math.max(8, wave);
     });
   }
   
@@ -672,18 +672,20 @@ body {
   right: 60px;
   height: 30px;
   display: flex;
-  align-items: end;
-  justify-content: space-between;
-  gap: 2px;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 3px;
+  padding: 0 10px;
 }
 
 .audio-bar {
-  flex: 1;
-  min-height: 2px;
+  width: 4px;
+  min-height: 4px;
   background: linear-gradient(to top, #00ff88, #00ccff);
-  border-radius: 1px;
-  transition: height 0.1s ease-out, opacity 0.1s ease-out;
-  box-shadow: 0 0 4px rgba(0, 255, 136, 0.5);
+  border-radius: 2px;
+  transition: height 0.15s ease-out, opacity 0.15s ease-out;
+  box-shadow: 0 0 6px rgba(0, 255, 136, 0.6);
+  transform-origin: bottom;
 }
 
 .bracelet-screen {
