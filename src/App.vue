@@ -51,6 +51,8 @@
               :handleSphereClick="handleSphereClick"
               :sphereTransformStyle="sphereTransformStyle"
               :showHint="showHint"
+              :isRealTimeCallActive="isRealTimeCallActive"
+              :callStatus="callStatus"
               :audioVisualization="audioVisualization"
             />
           </router-view>
@@ -261,22 +263,19 @@ const updateAudioVisualization = () => {
   if (isRealTimeCallActive.value && speechService) {
     const audioData = speechService.getAudioData()
     if (audioData && audioData.length > 0) {
-      // 转换为可视化数据，取前12个元素（适合手环显示）
-      audioVisualization.value = Array.from(audioData).slice(0, 12).map(value => value * 2.5)
+      // 转换为可视化数据，取前32个元素
+      audioVisualization.value = Array.from(audioData).slice(0, 32).map(value => value * 2)
     } else {
       // 如果没有音频数据，生成随机可视化效果
-      audioVisualization.value = Array.from({length: 12}, () => Math.random() * 70 + 15)
+      audioVisualization.value = Array.from({length: 32}, () => Math.random() * 100 + 50)
     }
   } else {
-    // 在非通话状态时，显示静态的呼吸效果
-    const time = performance.now() * 0.003;
-    audioVisualization.value = Array.from({length: 12}, (_, i) => {
-      const wave = Math.sin(time + i * 0.4) * 25 + 35;
-      return Math.max(8, wave);
-    });
+    audioVisualization.value = []
   }
   
-  requestAnimationFrame(updateAudioVisualization)
+  if (isRealTimeCallActive.value) {
+    requestAnimationFrame(updateAudioVisualization)
+  }
 }
 
 // --- Hint Animation ---
@@ -371,7 +370,6 @@ function animateSphere() {
 onMounted(() => {
   mainContentRef.value?.addEventListener('scroll', handleScroll, { passive: true });
   animateSphere();
-  updateAudioVisualization(); // 启动音频可视化
   setTimeout(() => {
     showHint.value = true;
   }, 2500); // Show hint after 2.5 seconds
@@ -632,138 +630,7 @@ body {
   animation: hint-pulse-animation 3s ease-in-out infinite;
 }
 
-/* Smart Bracelet Styles */
-.smart-bracelet {
-  width: 200px;
-  height: 80px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.bracelet-body {
-  position: relative;
-  width: 100%;
-  height: 50px;
-  background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
-  border-radius: 25px;
-  border: 2px solid #444;
-  box-shadow: 
-    inset 0 2px 8px rgba(255, 255, 255, 0.1),
-    inset 0 -2px 8px rgba(0, 0, 0, 0.3),
-    0 4px 16px rgba(0, 0, 0, 0.4);
-  overflow: hidden;
-}
-
-.bracelet-body::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 50%;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.15) 0%, transparent 100%);
-  border-radius: 25px 25px 0 0;
-}
-
-.audio-visualizer {
-  position: absolute;
-  bottom: 8px;
-  left: 15px;
-  right: 60px;
-  height: 30px;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  gap: 3px;
-  padding: 0 10px;
-}
-
-.audio-bar {
-  width: 4px;
-  min-height: 4px;
-  background: linear-gradient(to top, #00ff88, #00ccff);
-  border-radius: 2px;
-  transition: height 0.15s ease-out, opacity 0.15s ease-out;
-  box-shadow: 0 0 6px rgba(0, 255, 136, 0.6);
-  transform-origin: bottom;
-}
-
-.bracelet-screen {
-  position: absolute;
-  right: 8px;
-  top: 8px;
-  width: 45px;
-  height: 34px;
-  background: #000;
-  border-radius: 8px;
-  border: 1px solid #333;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.screen-glow {
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(circle, rgba(0, 150, 255, 0.3) 0%, transparent 70%);
-  border-radius: 6px;
-  transition: all 0.3s ease;
-}
-
-.bracelet-connector {
-  position: absolute;
-  top: 18px;
-  width: 15px;
-  height: 14px;
-  background: linear-gradient(145deg, #333, #1a1a1a);
-  border: 1px solid #555;
-  border-radius: 3px;
-}
-
-.bracelet-connector.left {
-  left: -8px;
-  border-radius: 3px 0 0 3px;
-}
-
-.bracelet-connector.right {
-  right: -8px;
-  border-radius: 0 3px 3px 0;
-}
-
-/* Breathing animation for the bracelet */
-@keyframes bracelet-breathe {
-  0%, 100% { 
-    transform: scale(1);
-    box-shadow: 
-      inset 0 2px 8px rgba(255, 255, 255, 0.1),
-      inset 0 -2px 8px rgba(0, 0, 0, 0.3),
-      0 4px 16px rgba(0, 0, 0, 0.4);
-  }
-  50% { 
-    transform: scale(1.05);
-    box-shadow: 
-      inset 0 2px 8px rgba(255, 255, 255, 0.15),
-      inset 0 -2px 8px rgba(0, 0, 0, 0.2),
-      0 6px 20px rgba(0, 0, 0, 0.5),
-      0 0 20px rgba(100, 200, 255, 0.2);
-  }
-}
-
-.smart-bracelet:hover .bracelet-body {
-  animation: bracelet-breathe 2s ease-in-out infinite;
-}
-
-/* Legacy liquid sphere styles (kept for compatibility) */
-@keyframes morph {
-  0% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
-  50% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
-  100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
-}
-.liquid-sphere {
-  animation: morph 8s ease-in-out infinite;
-  background: linear-gradient(135deg, #a8b2ff, #f3b0ff);
-}
+/* 移除原有的液体球形动画，现在使用音频可视化柱状图 */
 
 /* Custom scrollbar for webkit browsers */
 .overflow-y-auto::-webkit-scrollbar {
