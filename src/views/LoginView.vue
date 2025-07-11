@@ -1,5 +1,6 @@
 <template>
-  <div class="h-screen w-full bg-black flex flex-col relative overflow-hidden">
+  <PhoneFrame>
+    <div class="h-full w-full bg-black flex flex-col relative overflow-hidden">
       
     <!-- 所有内容 -->
     <div class="h-full w-full flex flex-col relative">
@@ -104,12 +105,14 @@
         </div>
       </div>
     </div>
-  </div>
+    </div>
+  </PhoneFrame>
 </template>
 
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import PhoneFrame from '../components/PhoneFrame.vue'
 
 const router = useRouter()
 
@@ -173,10 +176,17 @@ const quickLogin = () => {
 </script>
 
 <style scoped>
-/* 确保完全填充视口 */
+/* 确保完全填充手机边框 */
 .h-screen {
   height: 100vh;
   height: 100dvh; /* 动态视口高度，更好地适配移动设备 */
+}
+
+/* 在PhoneFrame内时的调整 */
+@media (min-width: 768px) {
+  .h-screen {
+    height: 100%;
+  }
 }
 
 /* 安全区域适配 */

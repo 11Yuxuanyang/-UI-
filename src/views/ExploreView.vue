@@ -1,5 +1,6 @@
 <template>
-  <div class="h-screen w-full bg-black flex flex-col relative overflow-hidden">
+  <PhoneFrame>
+    <div class="h-full w-full bg-black flex flex-col relative overflow-hidden">
     <!-- 静态背景 -->
     <div class="absolute inset-0 bg-gradient-to-br from-gray-900 via-purple-900 to-blue-900 z-0"></div>
     
@@ -212,14 +213,14 @@
         </div>
       </footer>
     </div>
-
-
-  </div>
+    </div>
+  </PhoneFrame>
 </template>
 
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import PhoneFrame from '../components/PhoneFrame.vue'
 
 const router = useRouter()
 
@@ -259,10 +260,17 @@ const exploreStore = () => {
 </script>
 
 <style scoped>
-/* 确保完全填充视口 */
+/* 确保完全填充手机边框 */
 .h-screen {
   height: 100vh;
   height: 100dvh;
+}
+
+/* 在PhoneFrame内时的调整 */
+@media (min-width: 768px) {
+  .h-screen {
+    height: 100%;
+  }
 }
 
 /* 安全区域适配 */
