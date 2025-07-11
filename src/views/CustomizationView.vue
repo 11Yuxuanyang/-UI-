@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 relative overflow-hidden flex flex-col">
+  <div class="h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 relative overflow-hidden flex flex-col">
     <!-- Background Pattern -->
     <div class="absolute inset-0 opacity-10">
       <div class="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_25%_25%,rgba(59,130,246,0.15),transparent_50%)]"></div>
@@ -20,12 +20,13 @@
       </button>
     </div>
 
-    <!-- Main Content -->
-    <div class="relative z-10 flex-1 flex flex-col px-4 pb-4">
-      <!-- Product Display -->
-      <div class="flex items-center justify-center py-4" style="height: 40%;">
+    <!-- Main Content Area -->
+    <div class="relative z-10 flex-1 flex flex-col min-h-0">
+      
+      <!-- Product Display Area -->
+      <div class="flex-shrink-0 flex items-center justify-center py-4" style="height: 40%;">
         <div class="relative">
-          <!-- Watch Display -->
+          <!-- Watch Body -->
           <div :class="[
             'w-32 h-40 rounded-3xl relative shadow-2xl transition-all duration-500',
             getWatchBodyStyle()
@@ -64,7 +65,7 @@
       </div>
 
       <!-- Product Info -->
-      <div class="text-center py-2">
+      <div class="flex-shrink-0 text-center px-4 pb-3">
         <h2 class="text-lg font-bold text-white mb-1">{{ currentConfig.name || 'HealthWatch Pro' }}</h2>
         <div class="flex items-center justify-center space-x-3 text-sm text-gray-300">
           <span>{{ currentVariant }}/{{ totalVariants }}</span>
@@ -74,103 +75,126 @@
       </div>
 
       <!-- Customization Options -->
-      <div class="flex-1 space-y-4">
-        <!-- Material Selection -->
-        <div class="text-center">
-          <h3 class="text-white font-medium mb-3 text-sm">材质选择</h3>
-          <div class="flex space-x-2 justify-center">
+      <div class="flex-1 bg-gray-900/95 backdrop-blur-lg border-t border-white/20 flex flex-col min-h-0">
+        
+        <!-- Category Tabs -->
+        <div class="flex-shrink-0 flex justify-center py-3">
+          <div class="flex space-x-1 bg-white/10 backdrop-blur-sm rounded-full p-1">
             <button 
-              v-for="material in materials" 
-              :key="material.id"
-              @click="selectMaterial(material)"
+              v-for="category in customizationCategories" 
+              :key="category.id"
+              @click="activeCategory = category.id"
               :class="[
-                'px-4 py-2 rounded-full text-xs font-medium transition-all duration-300 border',
-                currentConfig.materialId === material.id 
-                  ? 'bg-white text-gray-900 border-white' 
-                  : 'bg-white/10 text-white border-white/30 hover:bg-white/20'
+                'px-3 py-1 rounded-full text-xs font-medium transition-all duration-300',
+                activeCategory === category.id 
+                  ? 'bg-white text-gray-900' 
+                  : 'text-white/70 hover:text-white'
               ]"
             >
-              {{ material.name }}
+              {{ category.name }}
             </button>
           </div>
         </div>
 
-        <!-- Body Color Selection -->
-        <div class="text-center">
-          <h3 class="text-white font-medium mb-3 text-sm">表身颜色</h3>
-          <div class="flex space-x-3 justify-center">
-            <button 
-              v-for="color in bodyColors" 
-              :key="color.id"
-              @click="selectBodyColor(color)"
-              :class="[
-                'w-10 h-10 rounded-full border-3 transition-all duration-300 shadow-lg',
-                currentConfig.bodyColorId === color.id 
-                  ? 'border-white scale-110' 
-                  : 'border-white/30 hover:border-white/60 hover:scale-105'
-              ]"
-              :style="{ backgroundColor: color.value }"
-            >
-              <span class="sr-only">{{ color.name }}</span>
+        <!-- Options Display Area -->
+        <div class="flex-1 flex items-center justify-center px-4 min-h-0">
+          <!-- Material Selection -->
+          <div v-if="activeCategory === 'material'" class="text-center w-full">
+            <h3 class="text-white font-medium mb-3 text-sm">材质选择</h3>
+            <div class="flex justify-center space-x-2">
+              <button 
+                v-for="material in materials" 
+                :key="material.id"
+                @click="selectMaterial(material)"
+                :class="[
+                  'px-4 py-2 rounded-full text-xs font-medium transition-all duration-300 border',
+                  currentConfig.materialId === material.id 
+                    ? 'bg-white text-gray-900 border-white' 
+                    : 'bg-white/10 text-white border-white/30 hover:bg-white/20'
+                ]"
+              >
+                {{ material.name }}
+              </button>
+            </div>
+          </div>
+
+          <!-- Body Color Selection -->
+          <div v-if="activeCategory === 'bodyColor'" class="text-center w-full">
+            <h3 class="text-white font-medium mb-3 text-sm">表身颜色</h3>
+            <div class="flex justify-center space-x-3">
+              <button 
+                v-for="color in bodyColors" 
+                :key="color.id"
+                @click="selectBodyColor(color)"
+                :class="[
+                  'w-12 h-12 rounded-full border-4 transition-all duration-300 shadow-lg',
+                  currentConfig.bodyColorId === color.id 
+                    ? 'border-white scale-110' 
+                    : 'border-white/30 hover:border-white/60 hover:scale-105'
+                ]"
+                :style="{ backgroundColor: color.value }"
+              >
+                <span class="sr-only">{{ color.name }}</span>
+              </button>
+            </div>
+            <p class="text-gray-300 text-xs mt-2">{{ getCurrentBodyColor()?.name }}</p>
+          </div>
+
+          <!-- Band Color Selection -->
+          <div v-if="activeCategory === 'bandColor'" class="text-center w-full">
+            <h3 class="text-white font-medium mb-3 text-sm">表带颜色</h3>
+            <div class="flex justify-center space-x-3">
+              <button 
+                v-for="color in bandColors" 
+                :key="color.id"
+                @click="selectBandColor(color)"
+                :class="[
+                  'w-12 h-12 rounded-full border-4 transition-all duration-300 shadow-lg',
+                  currentConfig.bandColorId === color.id 
+                    ? 'border-white scale-110' 
+                    : 'border-white/30 hover:border-white/60 hover:scale-105'
+                ]"
+                :style="{ backgroundColor: color.value }"
+              >
+                <span class="sr-only">{{ color.name }}</span>
+              </button>
+            </div>
+            <p class="text-gray-300 text-xs mt-2">{{ getCurrentBandColor()?.name }}</p>
+          </div>
+
+          <!-- Size Selection -->
+          <div v-if="activeCategory === 'size'" class="text-center w-full">
+            <h3 class="text-white font-medium mb-3 text-sm">尺寸规格</h3>
+            <div class="flex justify-center space-x-2">
+              <button 
+                v-for="size in sizes" 
+                :key="size.id"
+                @click="selectSize(size)"
+                :class="[
+                  'px-4 py-2 rounded-full text-xs font-medium transition-all duration-300 border',
+                  currentConfig.sizeId === size.id 
+                    ? 'bg-white text-gray-900 border-white' 
+                    : 'bg-white/10 text-white border-white/30 hover:bg-white/20'
+                ]"
+              >
+                {{ size.name }}
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Price and Add to Cart -->
+        <div class="flex-shrink-0 border-t border-white/10 p-4">
+          <div class="flex items-center justify-between">
+            <div class="text-white">
+              <p class="text-xs text-gray-300">定制价格</p>
+              <p class="text-lg font-bold">¥{{ calculatePrice() }}</p>
+            </div>
+            <button @click="addToCart" 
+                    class="px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-xl transition-colors duration-300 shadow-lg text-sm">
+              加入购物车
             </button>
           </div>
-          <p class="text-gray-300 text-xs mt-2">{{ getCurrentBodyColor()?.name }}</p>
-        </div>
-
-        <!-- Band Color Selection -->
-        <div class="text-center">
-          <h3 class="text-white font-medium mb-3 text-sm">表带颜色</h3>
-          <div class="flex space-x-3 justify-center">
-            <button 
-              v-for="color in bandColors" 
-              :key="color.id"
-              @click="selectBandColor(color)"
-              :class="[
-                'w-10 h-10 rounded-full border-3 transition-all duration-300 shadow-lg',
-                currentConfig.bandColorId === color.id 
-                  ? 'border-white scale-110' 
-                  : 'border-white/30 hover:border-white/60 hover:scale-105'
-              ]"
-              :style="{ backgroundColor: color.value }"
-            >
-              <span class="sr-only">{{ color.name }}</span>
-            </button>
-          </div>
-          <p class="text-gray-300 text-xs mt-2">{{ getCurrentBandColor()?.name }}</p>
-        </div>
-
-        <!-- Size Selection -->
-        <div class="text-center">
-          <h3 class="text-white font-medium mb-3 text-sm">尺寸规格</h3>
-          <div class="flex space-x-2 justify-center">
-            <button 
-              v-for="size in sizes" 
-              :key="size.id"
-              @click="selectSize(size)"
-              :class="[
-                'px-4 py-2 rounded-full text-xs font-medium transition-all duration-300 border',
-                currentConfig.sizeId === size.id 
-                  ? 'bg-white text-gray-900 border-white' 
-                  : 'bg-white/10 text-white border-white/30 hover:bg-white/20'
-              ]"
-            >
-              {{ size.name }}
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Price and Add to Cart -->
-      <div class="border-t border-white/10 pt-3 mt-4">
-        <div class="flex items-center justify-between">
-          <div class="text-white">
-            <p class="text-xs text-gray-300">定制价格</p>
-            <p class="text-lg font-bold">¥{{ calculatePrice() }}</p>
-          </div>
-          <button @click="addToCart" 
-                  class="px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-xl transition-colors duration-300 shadow-lg text-sm">
-            加入购物车
-          </button>
         </div>
       </div>
     </div>
@@ -232,6 +256,15 @@ const currentVariant = ref(1);
 const totalVariants = computed(() => {
   return materials.value.length * bodyColors.value.length * bandColors.value.length * sizes.value.length;
 });
+
+// 定制分类管理
+const activeCategory = ref('material');
+const customizationCategories = ref([
+  { id: 'material', name: '材质' },
+  { id: 'bodyColor', name: '表身' },
+  { id: 'bandColor', name: '表带' },
+  { id: 'size', name: '尺寸' }
+]);
 
 // 选择材质
 const selectMaterial = (material) => {
@@ -343,5 +376,11 @@ const addToCart = () => {
 .animate-gradient {
   background-size: 200% 200%;
   animation: gradient 15s ease infinite;
+}
+
+/* 确保页面完全适配屏幕 */
+.h-screen {
+  height: 100vh;
+  height: 100dvh; /* 支持动态视口高度 */
 }
 </style> 
