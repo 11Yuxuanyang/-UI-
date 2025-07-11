@@ -21,18 +21,18 @@
     </div>
 
     <!-- Main Content -->
-    <div class="relative z-10 flex flex-col h-full">
+    <div class="relative z-10 flex flex-col" style="height: calc(100vh - 80px);">
       <!-- Product Display -->
-      <div class="flex-1 flex flex-col items-center justify-center px-6 py-4">
+      <div class="flex items-center justify-center px-6 py-2" style="height: 55%;">
         <!-- Watch Preview -->
-        <div class="relative flex items-center justify-center h-72 mb-4">
+        <div class="relative flex items-center justify-center h-full w-full max-w-sm">
           <div class="absolute inset-0 bg-gradient-to-b from-transparent via-white/5 to-transparent rounded-3xl"></div>
           
           <!-- Watch Body -->
           <div class="relative">
             <!-- Watch Display -->
             <div :class="[
-              'w-56 h-64 rounded-3xl relative shadow-2xl transition-all duration-500',
+              'w-40 h-48 rounded-3xl relative shadow-2xl transition-all duration-500',
               getWatchBodyStyle()
             ]">
               <!-- Screen -->
@@ -53,24 +53,26 @@
             </div>
 
             <!-- Watch Band -->
-            <div class="absolute -left-7 top-1/2 transform -translate-y-1/2">
+            <div class="absolute -left-5 top-1/2 transform -translate-y-1/2">
               <div :class="[
-                'w-14 h-44 rounded-full transition-all duration-500',
+                'w-10 h-36 rounded-full transition-all duration-500',
                 getBandStyle()
               ]"></div>
             </div>
-            <div class="absolute -right-7 top-1/2 transform -translate-y-1/2">
+            <div class="absolute -right-5 top-1/2 transform -translate-y-1/2">
               <div :class="[
-                'w-14 h-44 rounded-full transition-all duration-500',
+                'w-10 h-36 rounded-full transition-all duration-500',
                 getBandStyle()
               ]"></div>
             </div>
           </div>
         </div>
 
+        </div>
+        
         <!-- Product Info -->
-        <div class="text-center mb-4">
-          <h2 class="text-xl font-bold text-white mb-1">{{ currentConfig.name || 'HealthWatch Pro' }}</h2>
+        <div class="text-center mt-4">
+          <h2 class="text-lg font-bold text-white mb-1">{{ currentConfig.name || 'HealthWatch Pro' }}</h2>
           <div class="flex items-center justify-center space-x-3 text-sm text-gray-300">
             <span>{{ currentVariant }}/{{ totalVariants }}</span>
             <span>•</span>
@@ -80,16 +82,16 @@
       </div>
 
       <!-- Horizontal Customization Slider -->
-      <div class="bg-gray-900/95 backdrop-blur-lg border-t border-white/20 px-6 pb-6 pt-4">
+      <div class="bg-gray-900/95 backdrop-blur-lg border-t border-white/20 px-6 py-4" style="height: 45%;">
         <!-- Category Tabs -->
-        <div class="flex justify-center mb-4">
+        <div class="flex justify-center mb-3">
           <div class="flex space-x-1 bg-white/10 backdrop-blur-sm rounded-full p-1">
             <button 
               v-for="category in customizationCategories" 
               :key="category.id"
               @click="activeCategory = category.id"
               :class="[
-                'px-4 py-2 rounded-full text-sm font-medium transition-all duration-300',
+                'px-3 py-2 rounded-full text-xs font-medium transition-all duration-300',
                 activeCategory === category.id 
                   ? 'bg-white text-gray-900' 
                   : 'text-white/70 hover:text-white'
@@ -101,17 +103,17 @@
         </div>
 
         <!-- Options Container -->
-        <div class="mb-4">
+        <div class="flex-1 flex flex-col justify-center">
           <!-- Material Selection -->
           <div v-if="activeCategory === 'material'" class="text-center">
-            <h3 class="text-white font-medium mb-3">材质选择</h3>
-            <div class="flex space-x-3 overflow-x-auto pb-2" style="scrollbar-width: none; -ms-overflow-style: none;">
+            <h3 class="text-white font-medium mb-4">材质选择</h3>
+            <div class="flex space-x-3 justify-center">
               <button 
                 v-for="material in materials" 
                 :key="material.id"
                 @click="selectMaterial(material)"
                 :class="[
-                  'flex-shrink-0 px-6 py-3 rounded-full text-sm font-medium transition-all duration-300 border',
+                  'px-5 py-3 rounded-full text-sm font-medium transition-all duration-300 border',
                   currentConfig.materialId === material.id 
                     ? 'bg-white text-gray-900 border-white' 
                     : 'bg-white/10 text-white border-white/30 hover:bg-white/20'
@@ -124,14 +126,14 @@
 
           <!-- Body Color Selection -->
           <div v-if="activeCategory === 'bodyColor'" class="text-center">
-            <h3 class="text-white font-medium mb-3">表身颜色</h3>
-            <div class="flex space-x-4 overflow-x-auto pb-2 justify-center" style="scrollbar-width: none; -ms-overflow-style: none;">
+            <h3 class="text-white font-medium mb-4">表身颜色</h3>
+            <div class="flex space-x-4 justify-center">
               <button 
                 v-for="color in bodyColors" 
                 :key="color.id"
                 @click="selectBodyColor(color)"
                 :class="[
-                  'flex-shrink-0 w-16 h-16 rounded-full border-4 transition-all duration-300 shadow-lg',
+                  'w-14 h-14 rounded-full border-4 transition-all duration-300 shadow-lg',
                   currentConfig.bodyColorId === color.id 
                     ? 'border-white scale-110' 
                     : 'border-white/30 hover:border-white/60 hover:scale-105'
@@ -141,19 +143,19 @@
                 <span class="sr-only">{{ color.name }}</span>
               </button>
             </div>
-            <p class="text-gray-300 text-sm mt-2">{{ getCurrentBodyColor()?.name }}</p>
+            <p class="text-gray-300 text-sm mt-3">{{ getCurrentBodyColor()?.name }}</p>
           </div>
 
           <!-- Band Color Selection -->
           <div v-if="activeCategory === 'bandColor'" class="text-center">
-            <h3 class="text-white font-medium mb-3">表带颜色</h3>
-            <div class="flex space-x-4 overflow-x-auto pb-2 justify-center" style="scrollbar-width: none; -ms-overflow-style: none;">
+            <h3 class="text-white font-medium mb-4">表带颜色</h3>
+            <div class="flex space-x-4 justify-center">
               <button 
                 v-for="color in bandColors" 
                 :key="color.id"
                 @click="selectBandColor(color)"
                 :class="[
-                  'flex-shrink-0 w-16 h-16 rounded-full border-4 transition-all duration-300 shadow-lg',
+                  'w-14 h-14 rounded-full border-4 transition-all duration-300 shadow-lg',
                   currentConfig.bandColorId === color.id 
                     ? 'border-white scale-110' 
                     : 'border-white/30 hover:border-white/60 hover:scale-105'
@@ -163,19 +165,19 @@
                 <span class="sr-only">{{ color.name }}</span>
               </button>
             </div>
-            <p class="text-gray-300 text-sm mt-2">{{ getCurrentBandColor()?.name }}</p>
+            <p class="text-gray-300 text-sm mt-3">{{ getCurrentBandColor()?.name }}</p>
           </div>
 
           <!-- Size Selection -->
           <div v-if="activeCategory === 'size'" class="text-center">
-            <h3 class="text-white font-medium mb-3">尺寸规格</h3>
-            <div class="flex space-x-3 overflow-x-auto pb-2 justify-center" style="scrollbar-width: none; -ms-overflow-style: none;">
+            <h3 class="text-white font-medium mb-4">尺寸规格</h3>
+            <div class="flex space-x-3 justify-center">
               <button 
                 v-for="size in sizes" 
                 :key="size.id"
                 @click="selectSize(size)"
                 :class="[
-                  'flex-shrink-0 px-6 py-3 rounded-full text-sm font-medium transition-all duration-300 border',
+                  'px-5 py-3 rounded-full text-sm font-medium transition-all duration-300 border',
                   currentConfig.sizeId === size.id 
                     ? 'bg-white text-gray-900 border-white' 
                     : 'bg-white/10 text-white border-white/30 hover:bg-white/20'
@@ -188,14 +190,14 @@
         </div>
         
         <!-- Price and Add to Cart -->
-        <div class="border-t border-white/10 pt-4 mt-4">
+        <div class="border-t border-white/10 pt-3 mt-auto">
           <div class="flex items-center justify-between">
             <div class="text-white">
               <p class="text-sm text-gray-300">定制价格</p>
-              <p class="text-2xl font-bold">¥{{ calculatePrice() }}</p>
+              <p class="text-xl font-bold">¥{{ calculatePrice() }}</p>
             </div>
             <button @click="addToCart" 
-                    class="px-8 py-3 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-xl transition-colors duration-300 shadow-lg">
+                    class="px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-xl transition-colors duration-300 shadow-lg text-sm">
               加入购物车
             </button>
           </div>
@@ -396,5 +398,6 @@ const addToCart = () => {
 .min-h-screen {
   min-height: 100vh;
   height: 100vh;
+  overflow: hidden;
 }
 </style> 
