@@ -51,6 +51,7 @@
               :handleSphereClick="handleSphereClick"
               :sphereTransformStyle="sphereTransformStyle"
               :showHint="showHint"
+              :audioVisualization="audioVisualization"
             />
           </router-view>
           <!-- Spacer for bottom nav - 只在显示底部导航栏时需要 -->
@@ -260,19 +261,22 @@ const updateAudioVisualization = () => {
   if (isRealTimeCallActive.value && speechService) {
     const audioData = speechService.getAudioData()
     if (audioData && audioData.length > 0) {
-      // 转换为可视化数据，取前32个元素
-      audioVisualization.value = Array.from(audioData).slice(0, 32).map(value => value * 2)
+      // 转换为可视化数据，取前20个元素（适合手环显示）
+      audioVisualization.value = Array.from(audioData).slice(0, 20).map(value => value * 2)
     } else {
       // 如果没有音频数据，生成随机可视化效果
-      audioVisualization.value = Array.from({length: 32}, () => Math.random() * 100 + 50)
+      audioVisualization.value = Array.from({length: 20}, () => Math.random() * 60 + 20)
     }
   } else {
-    audioVisualization.value = []
+    // 在非通话状态时，显示静态的呼吸效果
+    const time = performance.now() * 0.002;
+    audioVisualization.value = Array.from({length: 20}, (_, i) => {
+      const wave = Math.sin(time + i * 0.3) * 20 + 30;
+      return Math.max(5, wave);
+    });
   }
   
-  if (isRealTimeCallActive.value) {
-    requestAnimationFrame(updateAudioVisualization)
-  }
+  requestAnimationFrame(updateAudioVisualization)
 }
 
 // --- Hint Animation ---
@@ -367,6 +371,7 @@ function animateSphere() {
 onMounted(() => {
   mainContentRef.value?.addEventListener('scroll', handleScroll, { passive: true });
   animateSphere();
+  updateAudioVisualization(); // 启动音频可视化
   setTimeout(() => {
     showHint.value = true;
   }, 2500); // Show hint after 2.5 seconds
@@ -627,6 +632,127 @@ body {
   animation: hint-pulse-animation 3s ease-in-out infinite;
 }
 
+/* Smart Bracelet Styles */
+.smart-bracelet {
+  width: 200px;
+  height: 80px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.bracelet-body {
+  position: relative;
+  width: 100%;
+  height: 50px;
+  background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
+  border-radius: 25px;
+  border: 2px solid #444;
+  box-shadow: 
+    inset 0 2px 8px rgba(255, 255, 255, 0.1),
+    inset 0 -2px 8px rgba(0, 0, 0, 0.3),
+    0 4px 16px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+}
+
+.bracelet-body::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.15) 0%, transparent 100%);
+  border-radius: 25px 25px 0 0;
+}
+
+.audio-visualizer {
+  position: absolute;
+  bottom: 8px;
+  left: 15px;
+  right: 60px;
+  height: 30px;
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 2px;
+}
+
+.audio-bar {
+  flex: 1;
+  min-height: 2px;
+  background: linear-gradient(to top, #00ff88, #00ccff);
+  border-radius: 1px;
+  transition: height 0.1s ease-out, opacity 0.1s ease-out;
+  box-shadow: 0 0 4px rgba(0, 255, 136, 0.5);
+}
+
+.bracelet-screen {
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  width: 45px;
+  height: 34px;
+  background: #000;
+  border-radius: 8px;
+  border: 1px solid #333;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.screen-glow {
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(0, 150, 255, 0.3) 0%, transparent 70%);
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.bracelet-connector {
+  position: absolute;
+  top: 18px;
+  width: 15px;
+  height: 14px;
+  background: linear-gradient(145deg, #333, #1a1a1a);
+  border: 1px solid #555;
+  border-radius: 3px;
+}
+
+.bracelet-connector.left {
+  left: -8px;
+  border-radius: 3px 0 0 3px;
+}
+
+.bracelet-connector.right {
+  right: -8px;
+  border-radius: 0 3px 3px 0;
+}
+
+/* Breathing animation for the bracelet */
+@keyframes bracelet-breathe {
+  0%, 100% { 
+    transform: scale(1);
+    box-shadow: 
+      inset 0 2px 8px rgba(255, 255, 255, 0.1),
+      inset 0 -2px 8px rgba(0, 0, 0, 0.3),
+      0 4px 16px rgba(0, 0, 0, 0.4);
+  }
+  50% { 
+    transform: scale(1.05);
+    box-shadow: 
+      inset 0 2px 8px rgba(255, 255, 255, 0.15),
+      inset 0 -2px 8px rgba(0, 0, 0, 0.2),
+      0 6px 20px rgba(0, 0, 0, 0.5),
+      0 0 20px rgba(100, 200, 255, 0.2);
+  }
+}
+
+.smart-bracelet:hover .bracelet-body {
+  animation: bracelet-breathe 2s ease-in-out infinite;
+}
+
+/* Legacy liquid sphere styles (kept for compatibility) */
 @keyframes morph {
   0% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
   50% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }

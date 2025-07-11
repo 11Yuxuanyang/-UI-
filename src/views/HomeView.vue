@@ -56,16 +56,35 @@
 
 
 
-    <!-- Sphere Container (now inside the scrollable area) -->
+    <!-- Smart Bracelet Container -->
     <div 
       class="mt-4 flex items-center justify-center overflow-hidden transition-all duration-300 ease-in-out"
       :style="sphereContainerStyle"
       @click="handleSphereClick"
     >
       <div 
-        class="relative w-32 h-32 liquid-sphere"
+        class="relative smart-bracelet"
         :style="sphereTransformStyle"
       >
+        <!-- 主金属手环 -->
+        <div class="bracelet-body">
+          <!-- 音频可视化条 -->
+          <div class="audio-visualizer">
+            <div 
+              v-for="(bar, index) in audioVisualization" 
+              :key="index"
+              class="audio-bar"
+              :style="{ height: `${Math.min(bar, 100)}%`, opacity: `${0.3 + Math.min(bar, 100) / 200}` }"
+            ></div>
+          </div>
+          <!-- 中央显示屏 -->
+          <div class="bracelet-screen">
+            <div class="screen-glow"></div>
+          </div>
+        </div>
+        <!-- 表带连接点 -->
+        <div class="bracelet-connector left"></div>
+        <div class="bracelet-connector right"></div>
       </div>
     </div>
     
@@ -175,6 +194,7 @@ const props = defineProps({
   handleSphereClick: Function,
   sphereTransformStyle: Object,
   showHint: Boolean,
+  audioVisualization: Array,
 });
 
 const route = useRoute();
