@@ -7,8 +7,8 @@
       muted 
       loop 
       playsinline
+      :src="backgroundVideoUrl"
     >
-              <source src="/assets/background-video.mp4" type="video/mp4">
     </video>
     
     <!-- 渐变遮罩层 -->
@@ -233,8 +233,8 @@
           class="w-full h-full object-cover"
           controls
           autoplay
+          :src="teaserVideoUrl"
         >
-          <source src="/videos/background.mp4" type="video/mp4">
         </video>
       </div>
     </div>
@@ -244,6 +244,8 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import backgroundVideoUrl from '/assets/background-video.mp4'
+import teaserVideoUrl from '/videos/background.mp4'
 
 const router = useRouter()
 

@@ -10,8 +10,8 @@
         muted 
         loop 
         playsinline
+        :src="backgroundVideoUrl"
       >
-        <source src="/assets/background-video.mp4" type="video/mp4">
       </video>
       
       <!-- 渐变遮罩层 -->
@@ -118,6 +118,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import backgroundVideoUrl from '/assets/background-video.mp4'
 
 const router = useRouter()
 
