@@ -237,7 +237,8 @@ const startExperience = () => {
   // 触发状态更新事件
   window.dispatchEvent(new Event('loginStatusChanged'))
   
-  router.push('/home')
+  // 直接跳转到商城页面
+  router.push('/mall')
 }
 
 // 了解更多
