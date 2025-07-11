@@ -56,77 +56,28 @@
 
 
 
-    <!-- Audio Visualizer Container (横向音频柱状图) -->
+    <!-- Sphere Container (now inside the scrollable area) -->
     <div 
       class="mt-4 flex items-center justify-center overflow-hidden transition-all duration-300 ease-in-out"
       :style="sphereContainerStyle"
       @click="handleSphereClick"
     >
-      <!-- 横向音频可视化柱状图 -->
-      <div class="flex items-end justify-center space-x-1.5 h-20 w-48 cursor-pointer transition-all duration-300 hover:scale-105">
-        <div
-          v-for="(bar, index) in audioVisualizationBars"
-          :key="index"
-          class="relative transition-all duration-150 ease-out"
-          :style="{ 
-            width: '6px', 
-            height: `${bar.height}px`,
-            background: isVoiceActive ? 
-              `linear-gradient(90deg, 
-                #1e293b 0%, 
-                #475569 20%, 
-                #cbd5e1 45%, 
-                #f1f5f9 50%, 
-                #cbd5e1 55%, 
-                #475569 80%, 
-                #1e293b 100%)` : 
-              `linear-gradient(90deg, 
-                #374151 0%, 
-                #6b7280 20%, 
-                #9ca3af 45%, 
-                #d1d5db 50%, 
-                #9ca3af 55%, 
-                #6b7280 80%, 
-                #374151 100%)`,
-            borderRadius: '3px',
-            boxShadow: isVoiceActive ? 
-              `inset 1px 0 1px rgba(255,255,255,0.3), 
-               inset -1px 0 1px rgba(0,0,0,0.3),
-               0 0 ${Math.random() * 8 + 4}px rgba(99, 102, 241, 0.4),
-               0 2px 4px rgba(0,0,0,0.3)` : 
-              `inset 1px 0 1px rgba(255,255,255,0.2), 
-               inset -1px 0 1px rgba(0,0,0,0.4),
-               0 1px 3px rgba(0,0,0,0.3)`,
-            transform: isVoiceActive ? 
-              `translateY(${bar.offsetY}px) scaleY(${0.8 + Math.random() * 0.4}) scaleX(1.1)` : 
-              `translateY(${bar.offsetY}px) scaleY(1) scaleX(1)`,
-            opacity: isVoiceActive ? 
-              0.9 + Math.random() * 0.1 : 
-              0.8
-          }"
-        >
-          <!-- 顶部圆形高光 -->
-          <div 
-            class="absolute top-0 left-1/2 transform -translate-x-1/2 w-full h-1.5 rounded-full"
-            :style="{
-              background: isVoiceActive ? 
-                'radial-gradient(ellipse at center, rgba(241,245,249,0.8) 0%, rgba(203,213,225,0.4) 70%, transparent 100%)' :
-                'radial-gradient(ellipse at center, rgba(209,213,219,0.6) 0%, rgba(156,163,175,0.3) 70%, transparent 100%)'
-            }"
-          ></div>
-        </div>
+      <div 
+        class="relative w-32 h-32 liquid-sphere"
+        :style="sphereTransformStyle"
+      >
       </div>
     </div>
     
     <!-- Voice Assistant Hint -->
     <div v-if="showHint" class="flex justify-center items-center text-center text-gray-500 text-sm hint-pulse -mt-8 mb-4">
-      <p>点击音频条与我语音对话</p>
+      <p>点击与我语音对话</p>
       <div class="ml-2 cursor-pointer group relative">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
           <path stroke-linecap="round" stroke-linejoin="round" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
         </svg>
         <div class="absolute bottom-full mb-2 w-48 bg-gray-800 text-white text-xs rounded py-2 px-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform -translate-x-1/2 left-1/2 pointer-events-none">
-          我可以语音回答您的健康问题，提供运动建议，分析健康数据。点击音频条开始对话！
+          我可以语音回答您的健康问题，提供运动建议，分析健康数据。点击浮动球开始对话！
           <svg class="absolute text-gray-800 h-2 w-full left-0 top-full" x="0px" y="0px" viewBox="0 0 255 255" xml:space="preserve"><polygon class="fill-current" points="0,0 127.5,127.5 255,0"/></svg>
         </div>
       </div>
@@ -224,67 +175,12 @@ const props = defineProps({
   handleSphereClick: Function,
   sphereTransformStyle: Object,
   showHint: Boolean,
-  isRealTimeCallActive: Boolean,
-  callStatus: String,
-  audioVisualization: Array,
 });
 
 const route = useRoute();
 const router = useRouter();
 const showAddDeviceModal = ref(false);
 const showVoiceSettingsModal = ref(false);
-
-// 音频可视化相关状态
-const audioVisualizationBars = ref([]);
-const isVoiceActive = computed(() => 
-  props.isRealTimeCallActive && (props.callStatus === 'listening' || props.callStatus === 'speaking')
-);
-
-// 初始化音频柱状图
-const initializeAudioBars = () => {
-  // 创建16个柱子，初始高度为随机值，并添加垂直偏移
-  audioVisualizationBars.value = Array.from({ length: 16 }, () => ({
-    height: Math.random() * 30 + 10,  // 10-40px的随机高度
-    offsetY: 0  // 初始垂直偏移为0
-  }));
-};
-
-// 更新音频可视化
-const updateAudioBars = () => {
-  if (props.audioVisualization && props.audioVisualization.length > 0) {
-    // 使用从App.vue传来的音频数据
-    audioVisualizationBars.value = props.audioVisualization.slice(0, 16).map((value, index) => {
-      const currentBar = audioVisualizationBars.value[index] || { height: 15, offsetY: 0 };
-      return {
-        height: Math.max(8, Math.min(60, value * 0.6 + 8)),  // 限制在8-60px范围内
-        offsetY: isVoiceActive.value ? (Math.sin(Date.now() * 0.01 + index * 0.5) * 8) : 0  // 上下运动幅度8px
-      };
-    });
-  } else if (isVoiceActive.value) {
-    // 如果没有真实音频数据但语音激活，生成动态效果
-    audioVisualizationBars.value = audioVisualizationBars.value.map((bar, index) => ({
-      height: Math.random() * 40 + 15,  // 15-55px的随机跳动
-      offsetY: Math.sin(Date.now() * 0.008 + index * 0.8) * 10 + Math.random() * 6 - 3  // 更动态的上下运动
-    }));
-  } else {
-    // 静止状态，轻微呼吸效果
-    const time = Date.now() * 0.003;
-    audioVisualizationBars.value = audioVisualizationBars.value.map((bar, index) => ({
-      height: 15 + Math.sin(time + index * 0.5) * 5,
-      offsetY: Math.sin(time * 0.5 + index * 0.3) * 2  // 静止时轻微的上下浮动
-    }));
-  }
-};
-
-// 启动动画循环
-let animationFrameId;
-const startAudioAnimation = () => {
-  const animate = () => {
-    updateAudioBars();
-    animationFrameId = requestAnimationFrame(animate);
-  };
-  animate();
-};
 
 // Inject navigation visibility control
 const setNavVisibility = inject('setNavVisibility');
@@ -293,21 +189,12 @@ const setNavVisibility = inject('setNavVisibility');
 onMounted(() => {
   // if (route.query.show === 'mall') { // This logic is now moved
   // }
-  
-  // 初始化音频可视化
-  initializeAudioBars();
-  startAudioAnimation();
 });
 
 // Reset nav visibility when leaving the view
 onUnmounted(() => {
   if (setNavVisibility) {
     setNavVisibility(true);
-  }
-  
-  // 清理动画
-  if (animationFrameId) {
-    cancelAnimationFrame(animationFrameId);
   }
 });
 

@@ -61,9 +61,14 @@
                 <span class="inline-block px-3 py-1 bg-white/20 rounded-full text-xs font-medium mb-3">限时优惠</span>
                 <h2 class="text-2xl font-bold mb-2">健康科技 智慧生活</h2>
                 <p class="text-white/80 text-sm mb-4">全新一代智能健康设备，享受8折特惠价格</p>
-                <button class="bg-white text-gray-900 px-6 py-2 rounded-full font-medium text-sm hover:bg-gray-100 transition-colors">
-                  立即选购
-                </button>
+                <div class="flex space-x-3">
+                  <button class="bg-white text-gray-900 px-6 py-2 rounded-full font-medium text-sm hover:bg-gray-100 transition-colors">
+                    立即选购
+                  </button>
+                  <button @click="goToCustomization" class="border border-white text-white px-6 py-2 rounded-full font-medium text-sm hover:bg-white/10 transition-colors">
+                    专属定制
+                  </button>
+                </div>
               </div>
               <div class="w-24 h-24 bg-white/10 rounded-2xl flex items-center justify-center ml-4">
                 <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -141,9 +146,15 @@
                         {{ product.discount }}
                       </span>
                     </div>
-                    <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-xl text-sm font-medium transition-colors">
-                      加入购物车
-                    </button>
+                    <div class="flex space-x-2">
+                      <button v-if="product.id === 1" @click="goToCustomization" 
+                              class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-xl text-sm font-medium transition-colors">
+                        定制
+                      </button>
+                      <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-xl text-sm font-medium transition-colors">
+                        加入购物车
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -211,6 +222,10 @@ const selectedMallCategory = ref('all');
 
 const goBack = () => {
   router.push('/home');
+};
+
+const goToCustomization = () => {
+  router.push('/customization');
 };
 
 // 商城相关数据

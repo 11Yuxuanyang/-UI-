@@ -212,6 +212,36 @@
       <!-- Exchange Tab -->
       <div v-if="activeTab === 'exchange'">
         <h3 class="text-lg font-semibold mb-4">积分兑换</h3>
+        
+        <!-- Mall Link -->
+        <div class="mb-6">
+          <div 
+            @click="$router.push('/mall')"
+            class="bg-gradient-to-r from-blue-600/30 to-purple-600/30 rounded-2xl p-4 border border-blue-500/30 cursor-pointer hover:border-blue-400/50 transition-all duration-300"
+          >
+            <div class="flex items-center space-x-4">
+              <div class="w-16 h-16 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-2xl flex items-center justify-center flex-shrink-0">
+                <svg class="w-8 h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+                </svg>
+              </div>
+              <div class="flex-1">
+                <h4 class="font-semibold text-white mb-1">🛍️ 前往商城购物</h4>
+                <p class="text-xs text-gray-300 mb-2">探索更多健康产品和智能设备</p>
+                <div class="flex items-center justify-between">
+                  <span class="text-blue-400 font-medium text-sm">立即前往</span>
+                  <div class="flex items-center space-x-1 text-blue-400">
+                    <span class="text-xs">查看全部商品</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
         <div class="grid grid-cols-1 gap-4">
           <div 
             v-for="reward in rewards" 

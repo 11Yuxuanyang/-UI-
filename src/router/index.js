@@ -3,12 +3,14 @@ import LoginView from '../views/LoginView.vue';
 import ExploreView from '../views/ExploreView.vue';
 import HomeView from '../views/HomeView.vue';
 import MallView from '../views/MallView.vue';
+import CustomizationView from '../views/CustomizationView.vue';
 import DataView from '../views/DataView.vue';
 import RecordsView from '../views/RecordsView.vue';
 import SettingsView from '../views/SettingsView.vue';
 import HealthSummaryDetailView from '../views/HealthSummaryDetailView.vue';
 import CollectionsView from '../views/CollectionsView.vue';
 import ScheduleView from '../views/ScheduleView.vue';
+import PointsView from '../views/PointsView.vue';
 
 const routes = [
   {
@@ -30,6 +32,11 @@ const routes = [
     path: '/mall',
     name: 'Mall',
     component: MallView,
+  },
+  {
+    path: '/customization',
+    name: 'Customization',
+    component: CustomizationView,
   },
   {
     path: '/data',
@@ -60,6 +67,11 @@ const routes = [
     path: '/schedule',
     name: 'Schedule',
     component: ScheduleView,
+  },
+  {
+    path: '/points',
+    name: 'Points',
+    component: PointsView,
   },
 ];
 

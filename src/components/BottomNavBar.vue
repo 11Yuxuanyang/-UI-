@@ -9,8 +9,8 @@
       
       <!-- 积分 -->
       <router-link 
-        ref="mallRef"
-        to="/mall" 
+        ref="pointsRef"
+        to="/points" 
         class="nav-item text-center flex flex-col items-center justify-center relative transition-all duration-300 ease-out hover:scale-110"
         @click="updateIndicator"
       >
@@ -98,7 +98,7 @@ import { useRoute } from 'vue-router'
 const route = useRoute()
 
 // 引用各个导航项
-const mallRef = ref(null)
+const pointsRef = ref(null)
 const dataRef = ref(null)
 const homeRef = ref(null)
 const scheduleRef = ref(null)
@@ -115,7 +115,7 @@ const indicatorStyle = ref({
 const getActiveNavRef = () => {
   const path = route.path
   switch (path) {
-    case '/mall': return mallRef.value
+    case '/points': return pointsRef.value
     case '/data': return dataRef.value
     case '/home': return homeRef.value
     case '/schedule': return scheduleRef.value

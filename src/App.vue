@@ -51,9 +51,6 @@
               :handleSphereClick="handleSphereClick"
               :sphereTransformStyle="sphereTransformStyle"
               :showHint="showHint"
-              :isRealTimeCallActive="isRealTimeCallActive"
-              :callStatus="callStatus"
-              :audioVisualization="audioVisualization"
             />
           </router-view>
           <!-- Spacer for bottom nav - 只在显示底部导航栏时需要 -->
@@ -630,7 +627,15 @@ body {
   animation: hint-pulse-animation 3s ease-in-out infinite;
 }
 
-/* 移除原有的液体球形动画，现在使用音频可视化柱状图 */
+@keyframes morph {
+  0% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+  50% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
+  100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+}
+.liquid-sphere {
+  animation: morph 8s ease-in-out infinite;
+  background: linear-gradient(135deg, #a8b2ff, #f3b0ff);
+}
 
 /* Custom scrollbar for webkit browsers */
 .overflow-y-auto::-webkit-scrollbar {
