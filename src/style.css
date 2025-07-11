@@ -1,0 +1,51 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities; 
+
+/* 覆盖HTML中的固定定位，允许应用正常滚动 */
+html, body {
+  height: 100% !important;
+  width: 100% !important;
+  overflow: visible !important;
+  position: static !important;
+  margin: 0;
+  padding: 0;
+}
+
+#app {
+  height: 100%;
+  width: 100%;
+}
+
+/* 移动端视口适配 */
+@supports (height: 100dvh) {
+  html, body, #app {
+    height: 100dvh;
+  }
+}
+
+/* 移动端触摸优化 */
+* {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* 允许输入框和按钮选择文本 */
+input, button, textarea {
+  -webkit-user-select: auto;
+  user-select: auto;
+}
+
+.glassmorphism-card {
+  background-color: rgba(28, 28, 30, 0.7) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+@keyframes hint-pulse-animation {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+} 
