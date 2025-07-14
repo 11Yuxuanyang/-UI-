@@ -86,7 +86,7 @@ const route = useRoute();
 const loginStatus = ref(sessionStorage.getItem('tempLoginStatus') === 'true');
 
 const showBottomNav = computed(() => {
-  const noNavRoutes = ['/', '/explore', '/mall'];
+  const noNavRoutes = ['/', '/explore', '/mall', '/customization'];
   // 如果在不需要导航栏的页面，则不显示
   if (noNavRoutes.includes(route.path)) {
     return false;

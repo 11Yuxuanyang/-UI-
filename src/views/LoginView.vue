@@ -3,9 +3,9 @@
     <div class="h-full w-full bg-black flex flex-col relative overflow-hidden">
       
     <!-- 所有内容 -->
-    <div class="h-full w-full flex flex-col relative bg-black">
+    <div class="h-full w-full flex flex-col relative luxury-watch-bg">
       <!-- 渐变遮罩层 -->
-      <div class="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/80 z-10"></div>
+      <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/80 z-10"></div>
       
       <!-- 内容容器 -->
       <div class="relative z-20 h-full flex flex-col text-white px-8">
@@ -173,6 +173,15 @@ const quickLogin = () => {
 </script>
 
 <style scoped>
+/* 奢侈表背景 */
+.luxury-watch-bg {
+  background-image: url('../assets/login-background.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+}
+
 /* 确保完全填充手机边框 */
 .h-screen {
   height: 100vh;
