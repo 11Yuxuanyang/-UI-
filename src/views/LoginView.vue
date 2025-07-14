@@ -176,7 +176,7 @@ const quickLogin = () => {
 /* 奢侈表背景 */
 .luxury-watch-bg {
   background-image: url('../assets/login-background.png');
-  background-size: cover;
+  background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
   position: relative;
